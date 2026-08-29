@@ -3,10 +3,11 @@ import Header from './components/Header/Header';
 import ProcessTable from './components/ProcessInput/ProcessTable';
 import AlgorithmSelector from './components/AlgorithmSelector/AlgorithmSelector';
 import SimulationControls from './components/SimulationControls/SimulationControls';
-import ResultsPlaceholder from './components/ResultsSection/ResultsPlaceholder';
+import ResultsSection from './components/ResultsSection/ResultsSection';
 import { DEFAULT_PROCESSES } from './constants/defaultProcesses';
 import { ALGORITHMS, DEFAULT_TIME_QUANTUM } from './constants/algorithms';
 import { validateSimulationConfig } from './utils/validation';
+import { runScheduler } from './algorithms';
 import './App.css';
 
 export default function App() {
@@ -14,6 +15,7 @@ export default function App() {
   const [selectedAlgorithm, setSelectedAlgorithm] = useState('FCFS');
   const [timeQuantum, setTimeQuantum] = useState(DEFAULT_TIME_QUANTUM);
   const [simulationState, setSimulationState] = useState('idle');
+  const [simulationResults, setSimulationResults] = useState(null);
   const [validationError, setValidationError] = useState(null);
 
   // Current algorithm object
@@ -21,38 +23,43 @@ export default function App() {
 
   const handleAddProcess = (newProc) => {
     setProcesses((prev) => [...prev, newProc]);
-    // Reset simulation state when input changes
     setSimulationState('idle');
+    setSimulationResults(null);
     setValidationError(null);
   };
 
   const handleRemoveProcess = (id) => {
     setProcesses((prev) => prev.filter((p) => p.id !== id));
     setSimulationState('idle');
+    setSimulationResults(null);
     setValidationError(null);
   };
 
   const handleClearAll = () => {
     setProcesses([]);
     setSimulationState('idle');
+    setSimulationResults(null);
     setValidationError(null);
   };
 
   const handleResetDefaults = () => {
     setProcesses(DEFAULT_PROCESSES);
     setSimulationState('idle');
+    setSimulationResults(null);
     setValidationError(null);
   };
 
   const handleSelectAlgorithm = (algoId) => {
     setSelectedAlgorithm(algoId);
     setSimulationState('idle');
+    setSimulationResults(null);
     setValidationError(null);
   };
 
   const handleChangeTimeQuantum = (val) => {
     setTimeQuantum(val);
     setSimulationState('idle');
+    setSimulationResults(null);
     setValidationError(null);
   };
 
@@ -67,11 +74,23 @@ export default function App() {
     if (!validation.isValid) {
       setValidationError(validation.message);
       setSimulationState('idle');
+      setSimulationResults(null);
       return;
     }
 
-    setValidationError(null);
-    setSimulationState('triggered');
+    try {
+      const results = runScheduler(selectedAlgorithm, processes, {
+        timeQuantum: parseInt(timeQuantum, 10) || DEFAULT_TIME_QUANTUM
+      });
+
+      setValidationError(null);
+      setSimulationResults(results);
+      setSimulationState('triggered');
+    } catch (err) {
+      setValidationError(`Simulation execution error: ${err.message}`);
+      setSimulationState('idle');
+      setSimulationResults(null);
+    }
   };
 
   return (
@@ -112,17 +131,18 @@ export default function App() {
         />
 
         {/* Section 4: Results & Visualizer Area */}
-        <ResultsPlaceholder
+        <ResultsSection
           simulationState={simulationState}
           selectedAlgorithm={currentAlgorithm.shortName}
           processCount={processes.length}
+          simulationResults={simulationResults}
         />
       </main>
 
       <footer className="app-footer">
         <div className="footer-container">
-          <span>CPU Job Scheduling Simulator &bull; Phase 1 Foundation</span>
-          <span className="footer-status">Algorithms & Gantt Engine ready for Phase 2</span>
+          <span>CPU Job Scheduling Simulator &bull; Phase 2 Implementation</span>
+          <span className="footer-status">Algorithms & Gantt Engine Active</span>
         </div>
       </footer>
     </div>

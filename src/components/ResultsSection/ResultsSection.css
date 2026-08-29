@@ -6,7 +6,7 @@
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1.5rem;
 }
 
 .results-status-badge {
@@ -19,6 +19,308 @@
   border-radius: 9999px;
 }
 
+.badge-active {
+  background-color: var(--success-subtle);
+  color: var(--success);
+  border-color: var(--success-border);
+}
+
+.results-active-dot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--success);
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px var(--success-border);
+}
+
+.results-active-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+/* 1. Summary Cards */
+.summary-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 1rem;
+}
+
+.stat-card {
+  background-color: var(--bg-card-subtle);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.stat-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+.stat-icon-wrap {
+  padding: 0.3rem;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon-amber {
+  background-color: var(--warning-subtle);
+  color: var(--warning);
+}
+
+.icon-indigo {
+  background-color: var(--primary-subtle);
+  color: var(--primary);
+}
+
+.icon-teal {
+  background-color: #ccfbf1;
+  color: #0f766e;
+}
+
+.icon-emerald {
+  background-color: var(--success-subtle);
+  color: var(--success);
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-main);
+  letter-spacing: -0.02em;
+}
+
+.stat-unit {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.stat-footer {
+  font-size: 0.75rem;
+  color: var(--text-subtle);
+  margin-top: 0.15rem;
+}
+
+/* 2. Gantt Chart */
+.gantt-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background-color: #fafbfc;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+}
+
+.gantt-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.gantt-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.gantt-legend {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: #ffffff;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 0.2rem 0.5rem;
+}
+
+.legend-color-box {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  border: 1px solid;
+}
+
+.legend-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.gantt-scroll-wrapper {
+  overflow-x: auto;
+  padding: 0.5rem 0 1.5rem 0;
+}
+
+.gantt-bar-wrapper {
+  display: flex;
+  align-items: stretch;
+  height: 52px;
+  border-radius: var(--radius-sm);
+  position: relative;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.gantt-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid;
+  position: relative;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  user-select: none;
+}
+
+.gantt-block:first-child {
+  border-top-left-radius: var(--radius-sm);
+  border-bottom-left-radius: var(--radius-sm);
+}
+
+.gantt-block:last-child {
+  border-top-right-radius: var(--radius-sm);
+  border-bottom-right-radius: var(--radius-sm);
+}
+
+.gantt-block:not(:last-child) {
+  border-right: none;
+}
+
+.gantt-block:hover {
+  transform: translateY(-2px);
+  z-index: 5;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.gantt-block-idle {
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 6px,
+    rgba(148, 163, 184, 0.15) 6px,
+    rgba(148, 163, 184, 0.15) 12px
+  );
+  font-style: italic;
+}
+
+.gantt-block-content {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.gantt-duration {
+  font-size: 0.7rem;
+  font-weight: 500;
+  opacity: 0.85;
+}
+
+/* Time markers below Gantt chart */
+.time-marker {
+  position: absolute;
+  bottom: -24px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.time-marker-start {
+  left: 0;
+  transform: translateX(-50%);
+}
+
+.time-marker-end {
+  right: 0;
+  transform: translateX(50%);
+}
+
+/* 3. Metrics Table */
+.metrics-table-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.metrics-table th {
+  background-color: var(--bg-card-subtle);
+  white-space: nowrap;
+}
+
+.metrics-table td {
+  white-space: nowrap;
+}
+
+.summary-row {
+  background-color: var(--bg-card-subtle);
+  border-top: 2px solid var(--border-strong);
+}
+
+.summary-row td {
+  padding: 0.875rem 1rem;
+  font-size: 0.875rem;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.text-indigo {
+  color: var(--primary);
+}
+
+.text-amber {
+  color: var(--warning);
+}
+
+.text-teal {
+  color: #0f766e;
+}
+
+.table-formulas-note {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  background-color: var(--bg-card-subtle);
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+}
+
+/* Placeholder styles preserved */
 .results-placeholder-body {
   border: 2px dashed var(--border-strong);
   border-radius: var(--radius-lg);
@@ -110,5 +412,8 @@
   }
   .features-preview-grid {
     grid-template-columns: 1fr;
+  }
+  .summary-cards-grid {
+    grid-template-columns: 1fr 1fr;
   }
 }
