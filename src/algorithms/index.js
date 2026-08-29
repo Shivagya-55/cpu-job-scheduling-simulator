@@ -1,8 +1,18 @@
-import { solveFCFS } from './fcfs';
-import { solveSJF } from './sjf';
-import { solveSRTF } from './srtf';
-import { solvePriority } from './priority';
-import { solveRoundRobin } from './roundRobin';
+import { solveFCFS } from './fcfs.js';
+import { solveSJF } from './sjf.js';
+import { solveSRTF } from './srtf.js';
+import { solvePriority } from './priority.js';
+import { solveRoundRobin } from './roundRobin.js';
+import { compareAllSchedulers } from './comparison.js';
+
+export {
+  solveFCFS,
+  solveSJF,
+  solveSRTF,
+  solvePriority,
+  solveRoundRobin,
+  compareAllSchedulers
+};
 
 /**
  * Runs the selected CPU scheduling algorithm on the provided processes.

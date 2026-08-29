@@ -7,7 +7,7 @@ import ResultsSection from './components/ResultsSection/ResultsSection';
 import { DEFAULT_PROCESSES } from './constants/defaultProcesses';
 import { ALGORITHMS, DEFAULT_TIME_QUANTUM } from './constants/algorithms';
 import { validateSimulationConfig } from './utils/validation';
-import { runScheduler } from './algorithms';
+import { runScheduler, compareAllSchedulers } from './algorithms';
 import './App.css';
 
 export default function App() {
@@ -16,6 +16,7 @@ export default function App() {
   const [timeQuantum, setTimeQuantum] = useState(DEFAULT_TIME_QUANTUM);
   const [simulationState, setSimulationState] = useState('idle');
   const [simulationResults, setSimulationResults] = useState(null);
+  const [comparisonData, setComparisonData] = useState(null);
   const [validationError, setValidationError] = useState(null);
 
   // Current algorithm object
@@ -25,6 +26,7 @@ export default function App() {
     setProcesses((prev) => [...prev, newProc]);
     setSimulationState('idle');
     setSimulationResults(null);
+    setComparisonData(null);
     setValidationError(null);
   };
 
@@ -32,6 +34,7 @@ export default function App() {
     setProcesses((prev) => prev.filter((p) => p.id !== id));
     setSimulationState('idle');
     setSimulationResults(null);
+    setComparisonData(null);
     setValidationError(null);
   };
 
@@ -39,6 +42,7 @@ export default function App() {
     setProcesses([]);
     setSimulationState('idle');
     setSimulationResults(null);
+    setComparisonData(null);
     setValidationError(null);
   };
 
@@ -46,6 +50,7 @@ export default function App() {
     setProcesses(DEFAULT_PROCESSES);
     setSimulationState('idle');
     setSimulationResults(null);
+    setComparisonData(null);
     setValidationError(null);
   };
 
@@ -53,6 +58,7 @@ export default function App() {
     setSelectedAlgorithm(algoId);
     setSimulationState('idle');
     setSimulationResults(null);
+    setComparisonData(null);
     setValidationError(null);
   };
 
@@ -60,6 +66,7 @@ export default function App() {
     setTimeQuantum(val);
     setSimulationState('idle');
     setSimulationResults(null);
+    setComparisonData(null);
     setValidationError(null);
   };
 
@@ -75,21 +82,32 @@ export default function App() {
       setValidationError(validation.message);
       setSimulationState('idle');
       setSimulationResults(null);
+      setComparisonData(null);
       return;
     }
 
     try {
-      const results = runScheduler(selectedAlgorithm, processes, {
-        timeQuantum: parseInt(timeQuantum, 10) || DEFAULT_TIME_QUANTUM
+      const parsedQuantum = parseInt(timeQuantum, 10) || DEFAULT_TIME_QUANTUM;
+
+      // 1. Single Selected Algorithm Results
+      const singleResults = runScheduler(selectedAlgorithm, processes, {
+        timeQuantum: parsedQuantum
+      });
+
+      // 2. Multi-Algorithm Comparison Evaluation
+      const multiComparison = compareAllSchedulers(processes, {
+        timeQuantum: parsedQuantum
       });
 
       setValidationError(null);
-      setSimulationResults(results);
+      setSimulationResults(singleResults);
+      setComparisonData(multiComparison);
       setSimulationState('triggered');
     } catch (err) {
       setValidationError(`Simulation execution error: ${err.message}`);
       setSimulationState('idle');
       setSimulationResults(null);
+      setComparisonData(null);
     }
   };
 
@@ -130,19 +148,21 @@ export default function App() {
           algorithmName={currentAlgorithm.name}
         />
 
-        {/* Section 4: Results & Visualizer Area */}
+        {/* Section 4: Results & Visualizer Area (Phase 3 Dashboard) */}
         <ResultsSection
           simulationState={simulationState}
-          selectedAlgorithm={currentAlgorithm.shortName}
+          selectedAlgorithm={currentAlgorithm.name}
+          currentAlgorithmId={currentAlgorithm.id}
           processCount={processes.length}
           simulationResults={simulationResults}
+          comparisonData={comparisonData}
         />
       </main>
 
       <footer className="app-footer">
         <div className="footer-container">
-          <span>CPU Job Scheduling Simulator &bull; Phase 2 Implementation</span>
-          <span className="footer-status">Algorithms & Gantt Engine Active</span>
+          <span>CPU Job Scheduling Simulator &bull; Phase 3 Visualization & Comparison</span>
+          <span className="footer-status">Interactive Timeline & 5-Algorithm Comparison Active</span>
         </div>
       </footer>
     </div>

@@ -1,8 +1,8 @@
 import React from 'react';
-import { Clock, Hourglass, Zap, Activity, CheckCircle2 } from 'lucide-react';
+import { Clock, Hourglass, Zap, Activity, Gauge, CheckCircle2 } from 'lucide-react';
 import './ResultsSection.css';
 
-export default function SummaryCards({ metrics }) {
+export default function SummaryCards({ metrics, processCount, algorithmName }) {
   if (!metrics) return null;
 
   const {
@@ -11,7 +11,8 @@ export default function SummaryCards({ metrics }) {
     averageResponseTime,
     totalExecutionTime,
     totalIdleTime,
-    cpuUtilization
+    cpuUtilization,
+    throughput
   } = metrics;
 
   return (
@@ -72,7 +73,22 @@ export default function SummaryCards({ metrics }) {
           {cpuUtilization.toFixed(1)}%
         </div>
         <div className="stat-footer">
-          <span>Total Makespan: {totalExecutionTime} units {totalIdleTime > 0 ? `(${totalIdleTime} idle)` : ''}</span>
+          <span>Makespan: {totalExecutionTime}u {totalIdleTime > 0 ? `(${totalIdleTime}u idle)` : ''}</span>
+        </div>
+      </div>
+
+      <div className="stat-card">
+        <div className="stat-card-header">
+          <span className="stat-label">Throughput</span>
+          <div className="stat-icon-wrap icon-purple">
+            <Gauge size={16} />
+          </div>
+        </div>
+        <div className="stat-value mono">
+          {throughput ? throughput.toFixed(3) : '0.000'} <span className="stat-unit">proc/unit</span>
+        </div>
+        <div className="stat-footer">
+          <span>{processCount} jobs / {totalExecutionTime} units</span>
         </div>
       </div>
     </div>
